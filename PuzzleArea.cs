@@ -38,6 +38,13 @@ namespace PuzzleFifteen
                     block.Top = row*80;
                     block.Left = col*80;
                     block.Text = blockCount.ToString();
+                    if(blockCount==16)
+                    {
+                        block.Text = string.Empty;
+                        block.BackColor = Color.CornflowerBlue;
+                        block.FlatStyle = FlatStyle.Flat;
+                        block.FlatAppearance.BorderSize = 0;
+                    }
                     blockCount++;
                     this.Controls.Add(block);
                 }
