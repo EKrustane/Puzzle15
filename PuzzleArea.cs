@@ -38,10 +38,11 @@ namespace PuzzleFifteen
                     {
                     Top = row * 80,
                     Left = col * 80,
-                    Text = blockCount.ToString()
+                    Text = blockCount.ToString(),
+                    Name = "Block" + blockCount.ToString()
                     };
                     block.Click += new EventHandler(Block_Click);
-                    //block.Click += Block_Click;
+                    //(same)  block.Click += Block_Click;
                     if(blockCount==16)
                     {
                         block.Name = "EmptyBlock";
@@ -60,13 +61,44 @@ namespace PuzzleFifteen
         private void Block_Click(object sender, EventArgs e)
         {
             Button block = (Button)sender;
-            SwapBlocks(block);
+            if (IsAdjacent(block))
+            {
+                SwapBlocks(block);
+            }
+            
         }
 
         private void SwapBlocks(Button block)
         {
-            Button zeroBlock = (Button)this.Controls["EmptyBlock"];
+            Button emptyBlock = (Button)this.Controls["EmptyBlock"];
+            Point oldLocation = block.Location;
+            /* (same like Point.....)
+             int oldLeft = block.Left;
+             int oldTop = block.Top;
+             emptyblock.Left = oldlLeft;
+             emptyblock.Top = oldTop;
+            */
+            block.Location = emptyBlock.Location;
+            emptyBlock.Location = oldLocation;
+        }
 
+        private bool IsAdjacent(Button block)
+        {
+            double a;
+            double b;
+            double c;
+            Button emptyBlock = (Button)this.Controls["EmptyBlock"];
+            a = emptyBlock.Top - block.Top; //modulis a = Math.Abs(emptyBlock.Top - block.Top);
+            b = emptyBlock.Left - block.Left;
+            c = Math.Sqrt(Math.Pow(a, 2) + Math.Pow(b, 2));
+            if (c< 81)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
