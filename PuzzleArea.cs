@@ -12,11 +12,14 @@ namespace PuzzleFifteen
 {
     public partial class PuzzleArea : Form
     {
+        Random rand = new Random();
+        List<Point> initialLocations = new List<Point>();
         public PuzzleArea()
         {
             InitializeComponent();
             InitializePuzzleArea();
             InitializeBlocks();
+            ShuffleBlocks();
         }
 
         private void InitializePuzzleArea()
@@ -35,7 +38,7 @@ namespace PuzzleFifteen
                 for (int col = 1; col < 5; col++)
                 {
                     block = new PuzzleBlock()
-                    {
+                    {  
                     Top = row * 80,
                     Left = col * 80,
                     Text = blockCount.ToString(),
@@ -43,6 +46,7 @@ namespace PuzzleFifteen
                     };
                     block.Click += new EventHandler(Block_Click);
                     //(same)  block.Click += Block_Click;
+                    initialLocations.Add(block.Location);
                     if(blockCount==16)
                     {
                         block.Name = "EmptyBlock";
@@ -64,6 +68,7 @@ namespace PuzzleFifteen
             if (IsAdjacent(block))
             {
                 SwapBlocks(block);
+                CheckForWin();
             }
             
         }
@@ -100,5 +105,58 @@ namespace PuzzleFifteen
                 return false;
             }
         }
+        private void ShuffleBlocks()
+        {
+            int randNumber;
+            string blockName;
+            Button block;
+            for(int i=0; i<100; i++)
+            {
+                randNumber = rand.Next(1, 16);
+                blockName = "Block" + randNumber.ToString();
+                block = (Button)this.Controls[blockName];
+                SwapBlocks(block);
+            }
+        }
+
+        private void puzzleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShuffleBlocks();
+        }
+
+        private void CheckForWin()
+        {
+            string blockName;
+            Button block;
+
+            for (int i = 1; i < 16; i++)
+            {
+                blockName = "Block" + i.ToString();
+                block = (Button)this.Controls[blockName];
+                if (block.Location != initialLocations[i - 1])
+                {
+                    return;
+                }
+                
+            }
+            PuzzleSolved();
+        }
+
+        private void PuzzleSolved()
+        {
+            MessageBox.Show("You solved that!");
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
+
+    
 }
